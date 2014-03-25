@@ -61,12 +61,6 @@ EXAMPLES:
 EOF
 }
 
-if [ "$USER" != 'root' ] && [ "$LOGNAME" != 'root' ]; then
-  # I don't want to troubleshoot the permissions of others
-  echo "This script must be run as root."
-  exit 1
-fi
-
 # Defaults
 S3CMD="s3cmd put"
 TMP_DIR="/tmp"
