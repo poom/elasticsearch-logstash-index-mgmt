@@ -34,7 +34,7 @@ OPTIONS:
   -c    Command for s3cmd (default: s3cmd put)
   -t    Temporary directory for archiving (default: /tmp)
   -p    Persist local backups, by default backups are not kept locally
-  -s    Shards (default: 5)
+  -s    Shards (default: 2)
   -r    Replicas (default: 0)
   -e    Elasticsearch URL (default: http://localhost:9200)
   -n    How nice tar must be (default: 19)
@@ -69,7 +69,7 @@ fi
 # Defaults
 S3CMD="s3cmd put"
 TMP_DIR="/tmp"
-SHARDS=5
+SHARDS=2
 REPLICAS=0
 ELASTICSEARCH="http://localhost:9200"
 NICE=19
