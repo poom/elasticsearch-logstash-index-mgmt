@@ -63,7 +63,7 @@ EOF
 
 # Defaults
 S3CMD="s3cmd put"
-TMP_DIR="/tmp"
+TMP_DIR="/mnt/data/tmp"
 SHARDS=2
 REPLICAS=0
 ELASTICSEARCH="http://localhost:9200"

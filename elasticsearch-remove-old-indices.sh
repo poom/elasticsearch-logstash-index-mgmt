@@ -51,7 +51,7 @@ EOF
 
 # Defaults
 ELASTICSEARCH="http://localhost:9200"
-KEEP=14
+KEEP=30
 TEST=1
 GREP="logstash"
 
