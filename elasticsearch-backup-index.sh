@@ -30,6 +30,7 @@ OPTIONS:
   -h    Show this message
   -b    S3 path for backups (Required)
   -i    Elasticsearch index directory (Required)
+  -x    Name of index (default: logstash)
   -d    Backup a specific date (format: YYYY.mm.dd)
   -c    Command for s3cmd (default: s3cmd put)
   -t    Temporary directory for archiving (default: /tmp)
@@ -73,12 +74,13 @@ SHARDS=2
 REPLICAS=0
 ELASTICSEARCH="http://localhost:9200"
 NICE=19
+NAME="logstash"
 RESTART="service elasticsearch restart"
 
 # Validate shard/replica values
 RE_D="^[0-9]+$"
 
-while getopts ":b:i:d:c:t:ps:r:e:n:u:h" flag
+while getopts ":b:i:d:x:c:t:ps:r:e:n:u:h" flag
 do
   case "$flag" in
     h)
@@ -93,6 +95,9 @@ do
       ;;
     d)
       DATE=$OPTARG
+      ;;
+    x)
+      NAME=$OPTARG
       ;;
     c)
       S3CMD=$OPTARG
@@ -155,11 +160,11 @@ fi
 
 # Default logstash index naming is hardcoded, as are YYYY-mm container directories.
 if [ -n "$DATE" ]; then
-  INDEX="logstash-$DATE"
+  INDEX="$NAME-$DATE"
   YEARMONTH=${DATE//\./-}
   YEARMONTH=${YEARMONTH:0:7}
 else
-  INDEX=`date --date='yesterday' +"logstash-%Y.%m.%d"`
+  INDEX=`date --date='yesterday' +"$NAME-%Y.%m.%d"`
   YEARMONTH=`date --date='yesterday' +"%Y-%m"`
 fi
 S3_TARGET="$S3_BASE/$YEARMONTH"
