@@ -30,7 +30,7 @@ OPTIONS:
   -e    Elasticsearch URL (default: http://localhost:9200)
   -g    Consistent index name (default: logstash)
   -o    Output actions to a specified file
-
+  -d    confirm delete (default: test not delete)
 EXAMPLES:
 
   ./elasticsearch-remove-old-indices.sh 
@@ -52,12 +52,13 @@ EOF
 # Defaults
 ELASTICSEARCH="http://localhost:9200"
 KEEP=14
+TEST=1
 GREP="logstash"
 
 # Validate numeric values
 RE_D="^[0-9]+$"
 
-while getopts ":i:e:g:o:h" flag
+while getopts ":i:e:g:o:h:d" flag
 do
   case "$flag" in
     h)
@@ -79,6 +80,9 @@ do
       ;;
     o)
       LOGFILE=$OPTARG
+      ;;
+    d)
+      TEST=0
       ;;
     ?)
       usage
@@ -114,10 +118,15 @@ if [ ${#INDEX[@]} -gt $KEEP ]; then
     # We don't want to accidentally delete everything
     if [ -n "$index" ]; then
       if [ -z "$LOGFILE" ]; then
-        curl -s -XDELETE "$ELASTICSEARCH/$index/" > /dev/null
+	if [ $TEST == 0 ]; then
+           curl -s -XDELETE "$ELASTICSEARCH/$index/" > /dev/null
+	fi
+        echo `date "+[%Y-%m-%d %H:%M] "`" Deleting index: $index."
       else
         echo `date "+[%Y-%m-%d %H:%M] "`" Deleting index: $index." >> $LOGFILE
-        curl -s -XDELETE "$ELASTICSEARCH/$index/" >> $LOGFILE
+        if [ $TEST == 0 ]; then
+           curl -s -XDELETE "$ELASTICSEARCH/$index/" >> $LOGFILE
+        fi
       fi
     fi
   done
